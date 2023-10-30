@@ -14,7 +14,7 @@ class BanTopics(Scanner):
     It uses a HuggingFace model to perform zero-shot classification.
     """
 
-    def __init__(self, topics=List[str], threshold: float = 0.6):
+    def __init__(self, ):
         """
         Initialize BanTopics object.
 
@@ -25,11 +25,6 @@ class BanTopics(Scanner):
         Raises:
             ValueError: If no topics are provided.
         """
-        if len(topics) == 0:
-            raise ValueError("No topics provided")
-
-        self._topics = topics
-        self._threshold = threshold
 
         transformers = lazy_load_dep("transformers")
         self._classifier = transformers.pipeline(
@@ -40,9 +35,14 @@ class BanTopics(Scanner):
         )
         logger.debug(f"Initialized model {_model_path} on device {device()}")
 
-    def scan(self, prompt: str) -> (str, bool, float):
+    def scan(self, prompt: str, topics=List[str], threshold: float = 0.6) -> (str, bool, float):
         if prompt.strip() == "":
             return prompt, True, 0.0
+        if len(topics) == 0:
+            raise ValueError("No topics provided")
+
+        self._topics = topics
+        self._threshold = threshold
 
         output_model = self._classifier(prompt, self._topics, multi_label=False)
 
