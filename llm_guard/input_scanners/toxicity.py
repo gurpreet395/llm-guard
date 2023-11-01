@@ -17,7 +17,7 @@ class Toxicity(Scanner):
     considered toxic.
     """
 
-    def __init__(self, threshold: float = 0.7):
+    def __init__(self):
         """
         Initializes Toxicity with a threshold for toxicity.
 
@@ -31,7 +31,6 @@ class Toxicity(Scanner):
         transformers = lazy_load_dep("transformers")
         model = transformers.AutoModelForSequenceClassification.from_pretrained(_model_path)
         self._tokenizer = transformers.AutoTokenizer.from_pretrained(_model_path)
-        self._threshold = threshold
         self._text_classification_pipeline = transformers.TextClassificationPipeline(
             model=model,
             tokenizer=self._tokenizer,
@@ -39,10 +38,9 @@ class Toxicity(Scanner):
         )
         logger.debug(f"Initialized model {_model_path} on device {device()}")
 
-    def scan(self, prompt: str) -> (str, bool, float):
+    def scan(self, prompt: str, threshold: float = 0.7) -> (str, bool, float):
         if prompt.strip() == "":
             return prompt, True, 0.0
-
         result = self._text_classification_pipeline(
             prompt, truncation=True, padding=True, max_length=self._tokenizer.model_max_length
         )
@@ -50,15 +48,15 @@ class Toxicity(Scanner):
         toxicity_score = (
             result[0]["score"] if result[0]["label"] == "toxic" else 1 - result[0]["score"]
         )
-        if toxicity_score > self._threshold:
+        if toxicity_score > threshold:
             logger.warning(
-                f"Detected toxic prompt with score: {toxicity_score}, threshold: {self._threshold}"
+                f"Detected toxic prompt with score: {toxicity_score}, threshold: {threshold}"
             )
 
             return prompt, False, round(toxicity_score, 2)
 
         logger.debug(
-            f"Not toxicity in the prompt. Max score: {toxicity_score}, threshold: {self._threshold}"
+            f"Not toxicity in the prompt. Max score: {toxicity_score}, threshold: {threshold}"
         )
 
         return prompt, True, 0.0

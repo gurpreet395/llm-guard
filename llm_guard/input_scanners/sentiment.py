@@ -28,9 +28,10 @@ class Sentiment(Scanner):
 
         sentiment = lazy_load_dep("nltk.sentiment", "nltk")
         self._sentiment_analyzer = sentiment.SentimentIntensityAnalyzer()
-        self._threshold = threshold
 
-    def scan(self, prompt: str) -> (str, bool, float):
+
+    def scan(self, prompt: str, threshold: float = -0.1) -> (str, bool, float):
+        self._threshold = threshold
         sentiment_score = self._sentiment_analyzer.polarity_scores(prompt)
         sentiment_score_compound = sentiment_score["compound"]
         if sentiment_score_compound > self._threshold:

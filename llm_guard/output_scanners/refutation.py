@@ -14,15 +14,13 @@ class Refutation(Scanner):
     This class checks for refutation between a given prompt and output using a pretrained NLI model.
     """
 
-    def __init__(self, threshold=0.5):
+    def __init__(self):
         """
         Initializes an instance of the Refutation class.
 
         Parameters:
             threshold (float): The threshold used to determine refutation. Defaults to 0.
         """
-
-        self._threshold = threshold
 
         transformers = lazy_load_dep("transformers")
         self._tokenizer = transformers.AutoTokenizer.from_pretrained(_model_path)
@@ -32,7 +30,7 @@ class Refutation(Scanner):
 
         logger.debug(f"Initialized sentence transformer {_model_path} on device {device()}")
 
-    def scan(self, prompt: str, output: str) -> (str, bool, float):
+    def scan(self, prompt: str, output: str, threshold=0.5) -> (str, bool, float):
         if prompt.strip() == "":
             return output, True, 0.0
 
@@ -47,7 +45,7 @@ class Refutation(Scanner):
         }
 
         not_entailment_score = prediction["not_entailment"]
-        if not_entailment_score > self._threshold:
+        if not_entailment_score > threshold:
             logger.warning(f"Detected refutation in the output: {prediction}")
 
             return output, False, not_entailment_score

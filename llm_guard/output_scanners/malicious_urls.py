@@ -22,7 +22,7 @@ class MaliciousURLs(Scanner):
     URLs as either malicious or benign to safeguard users from potential threats.
     """
 
-    def __init__(self, threshold=0.75):
+    def __init__(self):
         """
         Initializes an instance of the MaliciousURLs class.
 
@@ -33,7 +33,6 @@ class MaliciousURLs(Scanner):
         transformers = lazy_load_dep("transformers")
         model = transformers.AutoModelForSequenceClassification.from_pretrained(_model_path)
         self._tokenizer = transformers.AutoTokenizer.from_pretrained(_model_path)
-        self._threshold = threshold
         self._text_classification_pipeline = transformers.TextClassificationPipeline(
             model=model,
             tokenizer=self._tokenizer,
@@ -45,7 +44,7 @@ class MaliciousURLs(Scanner):
     def extract_urls(text: str) -> List[str]:
         return url_pattern.findall(text)
 
-    def scan(self, prompt: str, output: str) -> (str, bool, float):
+    def scan(self, prompt: str, output: str, threshold=0.75) -> (str, bool, float):
         if prompt.strip() == "":
             return output, True, 0.0
 
@@ -62,15 +61,15 @@ class MaliciousURLs(Scanner):
         malware_score = (
             result[0]["score"] if result[0]["label"] == "MALWARE" else 1 - result[0]["score"]
         )
-        if malware_score > self._threshold:
+        if malware_score > threshold:
             logger.warning(
-                f"Detected malware URL with score: {malware_score}, threshold: {self._threshold}"
+                f"Detected malware URL with score: {malware_score}, threshold: {self.threshold}"
             )
 
             return output, False, round(malware_score, 2)
 
         logger.debug(
-            f"Not malware URLs in the output. Max score: {malware_score}, threshold: {self._threshold}"
+            f"Not malware URLs in the output. Max score: {malware_score}, threshold: {threshold}"
         )
 
         return output, True, 0.0

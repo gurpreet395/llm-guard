@@ -18,7 +18,7 @@ class Relevance(Scanner):
     not relevant to the prompt.
     """
 
-    def __init__(self, threshold: float = 0.5, model: str = MODEL_EN_BGE_BASE):
+    def __init__(self, model: str = MODEL_EN_BGE_BASE):
         """
         Initializes an instance of the Relevance class.
 
@@ -41,7 +41,7 @@ class Relevance(Scanner):
 
         logger.debug(f"Initialized model {model} on device {device()}")
 
-    def scan(self, prompt: str, output: str) -> (str, bool, float):
+    def scan(self, prompt: str, output: str, threshold: float = 0.5) -> (str, bool, float):
         if output.strip() == "":
             return output, True, 0.0
 
@@ -49,7 +49,7 @@ class Relevance(Scanner):
         output_embedding = self._model.encode(output)
         similarity = prompt_embedding @ output_embedding.T
 
-        if similarity < self._threshold:
+        if similarity < threshold:
             logger.warning(f"Result is not similar to the prompt. Similarity score: {similarity}")
 
             return output, False, round(1 - similarity, 2)

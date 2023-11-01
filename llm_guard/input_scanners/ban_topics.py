@@ -41,10 +41,9 @@ class BanTopics(Scanner):
         if len(topics) == 0:
             raise ValueError("No topics provided")
 
-        self._topics = topics
         self._threshold = threshold
 
-        output_model = self._classifier(prompt, self._topics, multi_label=False)
+        output_model = self._classifier(prompt, topics, multi_label=False)
 
         max_score = round(max(output_model["scores"]) if output_model["scores"] else 0, 2)
         if max_score > self._threshold:

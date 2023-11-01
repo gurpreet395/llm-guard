@@ -15,7 +15,7 @@ class NoRefusal(Scanner):
     Refusals are common when the prompt breaches policies defined by the model.
     """
 
-    def __init__(self, threshold: float = 0.5):
+    def __init__(self):
         """
         Initializes an instance of the NoRefusal class.
 
@@ -23,7 +23,7 @@ class NoRefusal(Scanner):
             threshold (float): The similarity threshold to consider an output as refusal.
         """
 
-        self._threshold = threshold
+        # self._threshold = threshold
 
         transformers = lazy_load_dep("transformers")
         self._classifier = transformers.pipeline(
@@ -34,15 +34,15 @@ class NoRefusal(Scanner):
         )
         logger.debug(f"Initialized model {_model_path} on device {device()}")
 
-    def scan(self, prompt: str, output: str) -> (str, bool, float):
+    def scan(self, prompt: str, output: str, threshold: float = 0.5) -> (str, bool, float):
         if output.strip() == "":
             return output, True, 0.0
-
+        threshold = 0.5
         output_model = self._classifier(output, _categories, multi_label=False)
         combined_output = dict(zip(output_model["labels"], output_model["scores"]))
 
         max_score = round(combined_output["refusal"], 2)
-        if max_score > self._threshold:
+        if max_score > threshold:
             logger.warning(f"Refusal detected for the prompt: {combined_output}")
 
             return output, False, max_score
