@@ -41,7 +41,7 @@ class PromptInjection(Scanner):
         self._threshold = threshold
 
         if models is None:
-            models = [MODEL_JASPERLS, MODEL_GPTFUZZ]
+            models = [MODEL_GPTFUZZ]
 
         if not set(models).issubset(set(all_models)):
             raise ValueError(f"Models must be in the list of allowed: {all_models}")
