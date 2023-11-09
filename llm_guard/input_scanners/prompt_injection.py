@@ -4,16 +4,16 @@ from llm_guard.util import device, lazy_load_dep, logger
 
 from .base import Scanner
 
-MODEL_JASPERLS = "JasperLS/deberta-v3-base-injection"
+# MODEL_JASPERLS = "JasperLS/deberta-v3-base-injection"
 MODEL_GPTFUZZ = "hubert233/GPTFuzz"  # This dataset is more up-to-date than the popular one. However, it performs slower because based on RoBERTa-large model.
 
 all_models = [
-    MODEL_JASPERLS,
+    # MODEL_JASPERLS,
     MODEL_GPTFUZZ,
 ]
 
 _labels_mapping = {
-    MODEL_JASPERLS: "INJECTION",
+    # MODEL_JASPERLS: "INJECTION",
     MODEL_GPTFUZZ: 1,
 }
 
