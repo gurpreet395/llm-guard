@@ -2,11 +2,11 @@ from llm_guard.util import device, lazy_load_dep, logger
 
 from .base import Scanner
 
-# MODEL_EN_BGE_BASE = "BAAI/bge-base-en-v1.5"
-MODEL_EN_BGE_LARGE = "BAAI/bge-large-en-v1.5"
+MODEL_EN_BGE_BASE = "BAAI/bge-base-en-v1.5"
+# MODEL_EN_BGE_LARGE = "BAAI/bge-large-en-v1.5"
 # MODEL_EN_BGE_SMALL = "BAAI/bge-small-en-v1.5"
 
-all_models = [MODEL_EN_BGE_LARGE]#, MODEL_EN_BGE_BASE, MODEL_EN_BGE_SMALL]
+all_models = [MODEL_EN_BGE_BASE]#, MODEL_EN_BGE_BASE, MODEL_EN_BGE_SMALL]
 
 
 class Relevance(Scanner):
@@ -18,7 +18,7 @@ class Relevance(Scanner):
     not relevant to the prompt.
     """
 
-    def __init__(self, model: str = MODEL_EN_BGE_LARGE):
+    def __init__(self, model: str = MODEL_EN_BGE_BASE):
         """
         Initializes an instance of the Relevance class.
 
