@@ -27,7 +27,7 @@ class Relevance(Scanner):
             model (str): Model for calculating embeddings. Default is `BAAI/bge-base-en-v1.5`.
         """
 
-        self._threshold = threshold
+        # self._threshold = threshold
 
         if model not in all_models:
             raise ValueError("This model is not supported")
