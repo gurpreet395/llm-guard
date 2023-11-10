@@ -48,15 +48,16 @@ class Toxicity(Scanner):
         toxicity_score = (
             result[0]["score"] if result[0]["label"] == "toxic" else 1 - result[0]["score"]
         )
-        if toxicity_score > threshold:
-            logger.warning(
-                f"Detected toxic prompt with score: {toxicity_score}, threshold: {threshold}"
-            )
-
-            return prompt, False, round(toxicity_score, 2)
-
-        logger.debug(
-            f"Not toxicity in the prompt. Max score: {toxicity_score}, threshold: {threshold}"
-        )
-
-        return prompt, True, 0.0
+        return prompt, False, max(0, round(toxicity_score, 2))
+        # if toxicity_score > threshold:
+        #     logger.warning(
+        #         f"Detected toxic prompt with score: {toxicity_score}, threshold: {threshold}"
+        #     )
+        #
+        #     return prompt, False, round(toxicity_score, 2)
+        #
+        # logger.debug(
+        #     f"Not toxicity in the prompt. Max score: {toxicity_score}, threshold: {threshold}"
+        # )
+        #
+        # return prompt, True, 0.0
