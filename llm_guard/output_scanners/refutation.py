@@ -45,11 +45,12 @@ class Refutation(Scanner):
         }
 
         not_entailment_score = prediction["not_entailment"]
-        if not_entailment_score > threshold:
-            logger.warning(f"Detected refutation in the output: {prediction}")
-
-            return output, False, not_entailment_score
-
-        logger.debug(f"Not refutation in the output: {prediction}")
-
-        return output, True, 0.0
+        return output, False, not_entailment_score
+        # if not_entailment_score > threshold:
+        #     logger.warning(f"Detected refutation in the output: {prediction}")
+        #
+        #     return output, False, not_entailment_score
+        #
+        # logger.debug(f"Not refutation in the output: {prediction}")
+        #
+        # return output, True, 0.0
