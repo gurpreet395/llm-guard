@@ -13,7 +13,6 @@ class TokenLimit(Scanner):
 
     def __init__(
         self,
-        limit: int = 4096,
         encoding_name: str = "cl100k_base",
         model_name: Optional[str] = None,
     ):
@@ -29,9 +28,8 @@ class TokenLimit(Scanner):
             None.
         """
 
-        self._limit = limit
-
         tiktoken = lazy_load_dep("tiktoken")
+        self._limit  =3200
         if not model_name:
             self._encoding = tiktoken.get_encoding(encoding_name)
         else:
@@ -56,7 +54,7 @@ class TokenLimit(Scanner):
             return prompt, True, 0.0
 
         chunks, num_tokens = self._split_text_on_tokens(text=prompt)
-        return chunks, True,num_tokens
+        return chunks, True, num_tokens
         # if num_tokens < self._limit:
         #     logger.debug(f"Prompt fits the maximum tokens: {num_tokens}, max: {self._limit}")
         #     return prompt, True, 0.0
