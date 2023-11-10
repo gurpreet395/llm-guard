@@ -45,8 +45,8 @@ class BanTopics(Scanner):
 
         output_model = self._classifier(prompt, topics, multi_label=False)
 
-        max_score = round(max(output_model["scores"]) if output_model["scores"] else 0, 2)
-        return prompt, False, max_score
+        # max_score = round(max(output_model["scores"]) if output_model["scores"] else 0, 2)
+        return prompt, True, output_model['scores'], output_model['labels']
         # if max_score > self._threshold:
         #     logger.warning(
         #         f"Topics detected for the prompt {output_model['labels']} with scores: {output_model['scores']}"
