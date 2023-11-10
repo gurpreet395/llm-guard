@@ -56,10 +56,11 @@ class TokenLimit(Scanner):
             return prompt, True, 0.0
 
         chunks, num_tokens = self._split_text_on_tokens(text=prompt)
-        if num_tokens < self._limit:
-            logger.debug(f"Prompt fits the maximum tokens: {num_tokens}, max: {self._limit}")
-            return prompt, True, 0.0
-
-        logger.warning(f"Prompt is too big ({num_tokens} tokens). Split into chunks: {chunks}")
-
-        return chunks[0], False, 1.0
+        return chunks, True,num_tokens
+        # if num_tokens < self._limit:
+        #     logger.debug(f"Prompt fits the maximum tokens: {num_tokens}, max: {self._limit}")
+        #     return prompt, True, 0.0
+        #
+        # logger.warning(f"Prompt is too big ({num_tokens} tokens). Split into chunks: {chunks}")
+        #
+        # return chunks[0], False, 1.0
