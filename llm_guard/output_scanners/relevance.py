@@ -2,11 +2,11 @@ from llm_guard.util import device, lazy_load_dep, logger
 
 from .base import Scanner
 
-MODEL_EN_BGE_BASE = "BAAI/bge-base-en-v1.5"
+# MODEL_EN_BGE_BASE = "BAAI/bge-base-en-v1.5"
 MODEL_EN_BGE_LARGE = "BAAI/bge-large-en-v1.5"
-MODEL_EN_BGE_SMALL = "BAAI/bge-small-en-v1.5"
+# MODEL_EN_BGE_SMALL = "BAAI/bge-small-en-v1.5"
 
-all_models = [MODEL_EN_BGE_LARGE, MODEL_EN_BGE_BASE, MODEL_EN_BGE_SMALL]
+all_models = [MODEL_EN_BGE_LARGE]#, MODEL_EN_BGE_BASE, MODEL_EN_BGE_SMALL]
 
 
 class Relevance(Scanner):
@@ -18,7 +18,7 @@ class Relevance(Scanner):
     not relevant to the prompt.
     """
 
-    def __init__(self, model: str = MODEL_EN_BGE_BASE):
+    def __init__(self, model: str = MODEL_EN_BGE_LARGE):
         """
         Initializes an instance of the Relevance class.
 
@@ -48,12 +48,13 @@ class Relevance(Scanner):
         prompt_embedding = self._model.encode(prompt)
         output_embedding = self._model.encode(output)
         similarity = prompt_embedding @ output_embedding.T
-
-        if similarity < threshold:
-            logger.warning(f"Result is not similar to the prompt. Similarity score: {similarity}")
-
-            return output, False, round(1 - similarity, 2)
-
-        logger.debug(f"Result is similar to the prompt. Similarity score: {similarity}")
-
-        return output, True, 0.0
+        return output, True, similarity
+        #
+        # if similarity < threshold:
+        #     logger.warning(f"Result is not similar to the prompt. Similarity score: {similarity}")
+        #
+        #     return output, False, round(1 - similarity, 2)
+        #
+        # logger.debug(f"Result is similar to the prompt. Similarity score: {similarity}")
+        #
+        # return output, True, 0.0
