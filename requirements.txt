@@ -1,1 +1,1 @@
-'transformers[torch]'==4.25.1
+transformers[torch]
